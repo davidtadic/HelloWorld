@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="608cccca5b4843ae88a27b9c81f216c8" Name="Diagram1">
+        <EntityTypeShape EntityType="HelloWorldModel.Category" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HelloWorldModel.Game" Width="1.5" PointX="7.5" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="HelloWorldModel.GameQuestions" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HelloWorldModel.Image" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HelloWorldModel.Question" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="HelloWorldModel.User" Width="1.5" PointX="5.25" PointY="8.125" IsExpanded="true" />
+        <AssociationConnector Association="HelloWorldModel.FK_Question_CategoryId" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_Game_FirstPlayerId" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_Game_GameQuestions" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_Game_SecondPlayerId" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId1" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId2" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId3" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId4" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId5" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId6" ManuallyRouted="false" />
+        <AssociationConnector Association="HelloWorldModel.FK_Question_ImageId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
