@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HelloWorldModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HelloWorldModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="Id" />
@@ -72,9 +72,10 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Admin" Type="bit" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Image" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_Game_FirstPlayerId">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -260,8 +261,7 @@
             <End Role="Question" EntitySet="Question" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HelloWorldModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -288,10 +288,10 @@
           <Property Name="DatePlayed" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="FirstPlayerAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SecondPlayerAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Game_FirstPlayerId" FromRole="Game" ToRole="User" />
           <NavigationProperty Name="GameQuestions" Relationship="Self.FK_Game_GameQuestions" FromRole="Game" ToRole="GameQuestions" />
-          <NavigationProperty Name="User1" Relationship="Self.FK_Game_SecondPlayerId" FromRole="Game" ToRole="User" />
-        </EntityType>
+          <NavigationProperty Name="User" Relationship="HelloWorldModel.FK_Game_FirstPlayerId" FromRole="Game" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="HelloWorldModel.FK_Game_SecondPlayerId" FromRole="Game" ToRole="User" />
+          </EntityType>
         <EntityType Name="GameQuestions">
           <Key>
             <PropertyRef Name="Id" />
@@ -343,21 +343,6 @@
           <NavigationProperty Name="GameQuestions5" Relationship="Self.FK_GameQuestions_QuestionId6" FromRole="Question" ToRole="GameQuestions" />
           <NavigationProperty Name="Image" Relationship="Self.FK_Question_ImageId" FromRole="Question" ToRole="Image" />
         </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Admin" Type="Boolean" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Game" Relationship="Self.FK_Game_FirstPlayerId" FromRole="User" ToRole="Game" />
-          <NavigationProperty Name="Game1" Relationship="Self.FK_Game_SecondPlayerId" FromRole="User" ToRole="Game" />
-        </EntityType>
         <Association Name="FK_Question_CategoryId">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Question" Type="Self.Question" Multiplicity="*" />
@@ -370,18 +355,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Game_FirstPlayerId">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Game" Type="Self.Game" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Game">
-              <PropertyRef Name="FirstPlayerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Game_GameQuestions">
           <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="1" />
           <End Role="Game" Type="Self.Game" Multiplicity="*" />
@@ -391,18 +364,6 @@
             </Principal>
             <Dependent Role="Game">
               <PropertyRef Name="GameQuestionsId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Game_SecondPlayerId">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Game" Type="Self.Game" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Game">
-              <PropertyRef Name="SecondPlayerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -496,21 +457,12 @@
           <EntitySet Name="GameQuestions" EntityType="Self.GameQuestions" />
           <EntitySet Name="Image" EntityType="Self.Image" />
           <EntitySet Name="Question" EntityType="Self.Question" />
-          <EntitySet Name="User" EntityType="Self.User" />
           <AssociationSet Name="FK_Question_CategoryId" Association="Self.FK_Question_CategoryId">
             <End Role="Category" EntitySet="Category" />
             <End Role="Question" EntitySet="Question" />
           </AssociationSet>
-          <AssociationSet Name="FK_Game_FirstPlayerId" Association="Self.FK_Game_FirstPlayerId">
-            <End Role="User" EntitySet="User" />
-            <End Role="Game" EntitySet="Game" />
-          </AssociationSet>
           <AssociationSet Name="FK_Game_GameQuestions" Association="Self.FK_Game_GameQuestions">
             <End Role="GameQuestions" EntitySet="GameQuestions" />
-            <End Role="Game" EntitySet="Game" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Game_SecondPlayerId" Association="Self.FK_Game_SecondPlayerId">
-            <End Role="User" EntitySet="User" />
             <End Role="Game" EntitySet="Game" />
           </AssociationSet>
           <AssociationSet Name="FK_GameQuestions_QuestionId1" Association="Self.FK_GameQuestions_QuestionId1">
@@ -541,8 +493,58 @@
             <End Role="Image" EntitySet="Image" />
             <End Role="Question" EntitySet="Question" />
           </AssociationSet>
-        </EntityContainer>
-      </Schema>
+          <EntitySet Name="User" EntityType="HelloWorldModel.User" />
+          <AssociationSet Name="FK_Game_FirstPlayerId" Association="HelloWorldModel.FK_Game_FirstPlayerId">
+            <End Role="User" EntitySet="User" />
+            <End Role="Game" EntitySet="Game" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Game_SecondPlayerId" Association="HelloWorldModel.FK_Game_SecondPlayerId">
+            <End Role="User" EntitySet="User" />
+            <End Role="Game" EntitySet="Game" />
+          </AssociationSet>
+          </EntityContainer>
+        <EnumType Name="UserImage" a:ExternalTypeName="HelloWorld.Common.Enums.UserImage" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Admin" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Image" Type="HelloWorldModel.UserImage" Nullable="false" />
+          <NavigationProperty Name="Game" Relationship="HelloWorldModel.FK_Game_FirstPlayerId" FromRole="User" ToRole="Game" />
+          <NavigationProperty Name="Game1" Relationship="HelloWorldModel.FK_Game_SecondPlayerId" FromRole="User" ToRole="Game" />
+        </EntityType>
+        <Association Name="FK_Game_FirstPlayerId">
+          <End Type="HelloWorldModel.User" Role="User" Multiplicity="1" />
+          <End Type="HelloWorldModel.Game" Role="Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Game">
+              <PropertyRef Name="FirstPlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Game_SecondPlayerId">
+          <End Type="HelloWorldModel.User" Role="User" Multiplicity="1" />
+          <End Type="HelloWorldModel.Game" Role="Game" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Game">
+              <PropertyRef Name="SecondPlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -614,14 +616,15 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="HelloWorldModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

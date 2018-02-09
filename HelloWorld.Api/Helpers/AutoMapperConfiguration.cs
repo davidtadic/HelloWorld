@@ -13,6 +13,7 @@ namespace HelloWorld.Api.Helpers
         public AutoMapperConfigurationProfile()
         {
             CreateMap<User, UserModel>().ReverseMap();
+            CreateMap<User, TokenContext>().ReverseMap();
 
         }
     }

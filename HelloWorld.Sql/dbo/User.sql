@@ -5,7 +5,8 @@
     [LastName] NVARCHAR(50) NOT NULL, 
     [Email] NVARCHAR(50) NOT NULL, 
     [Username] NVARCHAR(50) NOT NULL, 
-    [Password] NVARCHAR(50) NOT NULL, 
+    [Password] NVARCHAR(MAX) NOT NULL, 
     [Admin] BIT NOT NULL DEFAULT 0, 
-    [DateCreated] DATETIME NOT NULL
+    [DateCreated] DATETIME NOT NULL,
+	[ImageThumbnail] NVARCHAR(MAX) NULL
 )

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using AutoMapper;
+using HelloWorld.Api.Helpers;
 
 namespace HelloWorld.Api
 {
@@ -24,6 +26,9 @@ namespace HelloWorld.Api
 
             // Remove xml formatter
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            //Configures AutoMapper
+            Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperConfigurationProfile>());
 
             // Web API routes
             config.MapHttpAttributeRoutes();

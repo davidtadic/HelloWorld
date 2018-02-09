@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HelloWorld.Data.Model;
 using HelloWorld.Data.UnitOfWork;
+using HelloWorld.Common.Exceptions;
 
 namespace HelloWorld.Core
 {
@@ -19,54 +20,76 @@ namespace HelloWorld.Core
             }
         }
 
-        public Category GetCategory(int id)
+        public User Login(string username, string password)
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-               Category category = uow.CategoryRepository.GetById(id);
-                return category;
+                List<User> users = uow.UserRepository.Find(u => username.ToLower().Trim() == u.Username.ToLower().Trim());
+
+                if (users.Count == 0)
+                {
+                    throw new ValidationException("Wrong username or password!");
+                }
+
+                User user = users.FirstOrDefault();
+
+                if (!PasswordHelper.ValidatePassword(password, user.Password))
+                {
+                    throw new ValidationException("Wrong username or password!");
+                }
+
+                return user;
             }
         }
 
-        public void InsertNewCategory(Category model)
+        public User Register(User clientModel)
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                Category categoryDb = new Category();
-                categoryDb.Name = model.Name;
-                categoryDb.Description = model.Description;
-                categoryDb.DateCreated = DateTime.UtcNow;
+                if (!string.IsNullOrEmpty(clientModel.Username) && !string.IsNullOrEmpty(clientModel.Password))
+                {
+                    List<User> existingUsers = uow.UserRepository.Find(u => u.Username == clientModel.Username || u.Email == clientModel.Email);
+                    if (existingUsers.Any())
+                    {
+                        throw new ValidationException("Account is already taken!");
+                    }
+                }
 
-                uow.CategoryRepository.Insert(categoryDb);
+                User userDb = new User();
+                userDb.FirstName = clientModel.FirstName;
+                userDb.LastName = clientModel.LastName;
+                userDb.Username = clientModel.Username;
+                userDb.Email = clientModel.Email;
+                userDb.Password = PasswordHelper.CreateHash(clientModel.Password);
+                userDb.Admin = false;
+                userDb.Image= clientModel.Image;
+                userDb.DateCreated = DateTime.UtcNow;
+
+                uow.UserRepository.Insert(userDb);
                 uow.Save();
+
+                return userDb;
             }
         }
 
-        public void UpdateCategory(Category model)
+        public User UpdateUserProfile(User client)
         {
             using (UnitOfWork uow = new UnitOfWork())
             {
-                Category category = uow.CategoryRepository.GetById(model.Id);
-                category.Name = model.Name;
-                category.Description = model.Name;
+                User db = uow.UserRepository.Find(x => x.Username == client.Username).FirstOrDefault();
+                ValidationHelper.ValidateNotNull(db);
 
-                uow.CategoryRepository.Update(category);
-                uow.Save();
-            }
-        }
+                db.FirstName = client.FirstName;
+                db.LastName = client.LastName;
+                db.Email = client.Email;
+                db.Password = PasswordHelper.CreateHash(client.Password);
+                db.Image = client.Image;
 
-        public void DeleteCategory(int id)
-        {
-            using (UnitOfWork uow = new UnitOfWork())
-            {
-                Category category = uow.CategoryRepository.GetById(id);
-
-                uow.CategoryRepository.Delete(category);
+                uow.UserRepository.Update(db);
                 uow.Save();
 
+                return db;
             }
         }
-
-
     }
 }

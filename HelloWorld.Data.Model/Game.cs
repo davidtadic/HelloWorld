@@ -24,8 +24,8 @@ namespace HelloWorld.Data.Model
         public string FirstPlayerAnswer { get; set; }
         public string SecondPlayerAnswer { get; set; }
     
-        public virtual User User { get; set; }
         public virtual GameQuestions GameQuestions { get; set; }
+        public virtual User User { get; set; }
         public virtual User User1 { get; set; }
     }
 }

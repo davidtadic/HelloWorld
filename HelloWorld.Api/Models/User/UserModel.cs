@@ -14,6 +14,7 @@ namespace HelloWorld.Api.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public bool Admin { get; set; }
+        public Common.Enums.UserImage Image { get; set; }
         public DateTime DateCreated { get; set; }
     }
 }

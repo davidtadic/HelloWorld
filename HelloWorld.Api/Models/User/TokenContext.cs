@@ -13,6 +13,7 @@ namespace HelloWorld.Api.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public bool Admin { get; set; }
+        public Common.Enums.UserImage Image { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }

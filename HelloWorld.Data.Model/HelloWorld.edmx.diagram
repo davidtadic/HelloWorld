@@ -10,11 +10,8 @@
         <EntityTypeShape EntityType="HelloWorldModel.GameQuestions" Width="1.5" PointX="5.25" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HelloWorldModel.Image" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HelloWorldModel.Question" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="HelloWorldModel.User" Width="1.5" PointX="5.25" PointY="8.125" IsExpanded="true" />
         <AssociationConnector Association="HelloWorldModel.FK_Question_CategoryId" ManuallyRouted="false" />
-        <AssociationConnector Association="HelloWorldModel.FK_Game_FirstPlayerId" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_Game_GameQuestions" ManuallyRouted="false" />
-        <AssociationConnector Association="HelloWorldModel.FK_Game_SecondPlayerId" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId1" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId2" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId3" ManuallyRouted="false" />
@@ -22,7 +19,10 @@
         <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId5" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_GameQuestions_QuestionId6" ManuallyRouted="false" />
         <AssociationConnector Association="HelloWorldModel.FK_Question_ImageId" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="HelloWorldModel.User" Width="1.5" PointX="5.25" PointY="9.125" />
+        <AssociationConnector Association="HelloWorldModel.FK_Game_FirstPlayerId" />
+        <AssociationConnector Association="HelloWorldModel.FK_Game_SecondPlayerId" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
