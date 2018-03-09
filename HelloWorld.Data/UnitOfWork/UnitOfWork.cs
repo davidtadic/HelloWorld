@@ -19,12 +19,12 @@ namespace HelloWorld.Data.UnitOfWork
         /// </summary>
         private HelloWorldEntities context;
 
-        private GenericRepository<Category> categoryRepository;
         private GenericRepository<Game> gameRepository;
         private GenericRepository<GameQuestions> gameQuestionsRepository;
         private GenericRepository<Image> imageRepository;
         private GenericRepository<Question> questionRepository;
         private GenericRepository<User> userRepository;
+        private GenericRepository<Practise> practiseRepository;
 
         #endregion Fields
 
@@ -42,14 +42,6 @@ namespace HelloWorld.Data.UnitOfWork
         }
 
         #region Repository
-
-        public GenericRepository<Category> CategoryRepository
-        {
-            get
-            {
-                return categoryRepository ?? (categoryRepository = new GenericRepository<Category>(DataContext));
-            }
-        }
 
         public GenericRepository<Game> GameRepository
         {
@@ -88,6 +80,14 @@ namespace HelloWorld.Data.UnitOfWork
             get
             {
                 return userRepository ?? (userRepository = new GenericRepository<User>(DataContext));
+            }
+        }
+
+        public GenericRepository<Practise> PractiseRepository
+        {
+            get
+            {
+                return practiseRepository ?? (practiseRepository = new GenericRepository<Practise>(DataContext));
             }
         }
 

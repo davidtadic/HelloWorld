@@ -1,5 +1,6 @@
 ﻿using HelloWorld.Api.Models;
 using HelloWorld.Core;
+using HelloWorld.Core.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,11 @@ namespace HelloWorld.Api.Controllers
         internal TokenContext Token { get; set; }
 
         private UserManager userManager;
+        private GameManager gameManager;
 
         protected UserManager UserManager => userManager ?? (userManager = new UserManager());
+        protected GameManager GameManager => gameManager ?? (gameManager = new GameManager());
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);

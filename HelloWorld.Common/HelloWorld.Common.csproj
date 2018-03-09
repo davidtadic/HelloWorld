@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Category.cs" />
+    <Compile Include="Enums\QuestionLevel.cs" />
     <Compile Include="Enums\UserImage.cs" />
     <Compile Include="Exceptions\AuthenticationException.cs" />
     <Compile Include="Exceptions\RunTimeException.cs" />

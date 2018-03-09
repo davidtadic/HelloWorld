@@ -8,5 +8,5 @@
     [Password] NVARCHAR(MAX) NOT NULL, 
     [Admin] BIT NOT NULL DEFAULT 0, 
     [DateCreated] DATETIME NOT NULL,
-	[ImageThumbnail] NVARCHAR(MAX) NULL
+	[Image] INT NOT NULL
 )

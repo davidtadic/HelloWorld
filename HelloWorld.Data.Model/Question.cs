@@ -31,11 +31,11 @@ namespace HelloWorld.Data.Model
         public string WrongAnswer1 { get; set; }
         public string WrongAnswer2 { get; set; }
         public string WrongAnswer3 { get; set; }
-        public int CategoryId { get; set; }
+        public HelloWorld.Common.Enums.Category Category { get; set; }
         public Nullable<int> ImageId { get; set; }
         public System.DateTime DateCreated { get; set; }
+        public HelloWorld.Common.Enums.QuestionLevel LevelQuestion { get; set; }
     
-        public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GameQuestions> GameQuestions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

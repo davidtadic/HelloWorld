@@ -1,0 +1,28 @@
+﻿<div>
+    Feedback - HelloWorld
+</div>
+@{
+    var message = ViewBag.Message as HelloWorld.Api.Models.User.MailModel;
+}
+<div>
+    <ul>
+        <li>
+            Name: <b>@message.FirstName</b> <b>@message.LastName</b>
+        </li>
+        <li>
+            Email: <b>@message.Email</b>
+        </li>
+        <li>
+            Username: <b>@message.Username</b>
+        </li>
+        <li>
+            Rating: <b>@message.Rating</b>
+        </li>
+        <li>
+            Subject: <b>@message.Subject</b>
+        </li>
+        <li>
+            Message: <b>@message.Message</b>
+        </li>
+    </ul>
+</div>

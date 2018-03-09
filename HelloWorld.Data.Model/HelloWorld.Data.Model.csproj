@@ -51,9 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Category.cs">
-      <DependentUpon>HelloWorld.tt</DependentUpon>
-    </Compile>
     <Compile Include="Game.cs">
       <DependentUpon>HelloWorld.tt</DependentUpon>
     </Compile>
@@ -76,6 +73,9 @@
       <DependentUpon>HelloWorld.edmx</DependentUpon>
     </Compile>
     <Compile Include="Image.cs">
+      <DependentUpon>HelloWorld.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Practise.cs">
       <DependentUpon>HelloWorld.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,6 +19,7 @@ namespace HelloWorld.Data.Model
         {
             this.Game = new HashSet<Game>();
             this.Game1 = new HashSet<Game>();
+            this.Practise = new HashSet<Practise>();
         }
     
         public int Id { get; set; }
@@ -29,11 +30,13 @@ namespace HelloWorld.Data.Model
         public string Password { get; set; }
         public bool Admin { get; set; }
         public System.DateTime DateCreated { get; set; }
-        public HelloWorld.Common.Enums.UserImage Image { get; set; }
+        public int Image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Game> Game { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Game> Game1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Practise> Practise { get; set; }
     }
 }

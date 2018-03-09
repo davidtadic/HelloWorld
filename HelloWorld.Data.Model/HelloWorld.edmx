@@ -5,15 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="HelloWorldModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="DateCreated" Type="datetime" Nullable="false" />
-        </EntityType>
         <EntityType Name="Game">
           <Key>
             <PropertyRef Name="Id" />
@@ -49,6 +40,17 @@
           <Property Name="Thumbnail" Type="nvarchar(max)" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Practise">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Points" Type="int" Nullable="false" />
+          <Property Name="DatePlayed" Type="datetime" Nullable="false" />
+          <Property Name="Level" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Question">
           <Key>
             <PropertyRef Name="Id" />
@@ -59,9 +61,10 @@
           <Property Name="WrongAnswer1" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="WrongAnswer2" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="WrongAnswer3" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="Category" Type="int" Nullable="false" />
           <Property Name="ImageId" Type="int" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="LevelQuestion" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -185,15 +188,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Question_CategoryId">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+        <Association Name="FK_Practise_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Practise" Type="Self.Practise" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Category">
+            <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="CategoryId" />
+            <Dependent Role="Practise">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -210,10 +213,10 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="HelloWorldModelStoreContainer">
-          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GameQuestions" EntityType="Self.GameQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Practise" EntityType="Self.Practise" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Game_FirstPlayerId" Association="Self.FK_Game_FirstPlayerId">
@@ -252,9 +255,9 @@
             <End Role="Question" EntitySet="Question" />
             <End Role="GameQuestions" EntitySet="GameQuestions" />
           </AssociationSet>
-          <AssociationSet Name="FK_Question_CategoryId" Association="Self.FK_Question_CategoryId">
-            <End Role="Category" EntitySet="Category" />
-            <End Role="Question" EntitySet="Question" />
+          <AssociationSet Name="FK_Practise_User" Association="Self.FK_Practise_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Practise" EntitySet="Practise" />
           </AssociationSet>
           <AssociationSet Name="FK_Question_ImageId" Association="Self.FK_Question_ImageId">
             <End Role="Image" EntitySet="Image" />
@@ -265,16 +268,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HelloWorldModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_Question_CategoryId" FromRole="Category" ToRole="Question" />
-        </EntityType>
         <EntityType Name="Game">
           <Key>
             <PropertyRef Name="Id" />
@@ -305,13 +298,13 @@
           <Property Name="QuestionId6" Type="Int32" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Game" Relationship="Self.FK_Game_GameQuestions" FromRole="GameQuestions" ToRole="Game" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_GameQuestions_QuestionId1" FromRole="GameQuestions" ToRole="Question" />
-          <NavigationProperty Name="Question1" Relationship="Self.FK_GameQuestions_QuestionId2" FromRole="GameQuestions" ToRole="Question" />
-          <NavigationProperty Name="Question2" Relationship="Self.FK_GameQuestions_QuestionId3" FromRole="GameQuestions" ToRole="Question" />
-          <NavigationProperty Name="Question3" Relationship="Self.FK_GameQuestions_QuestionId4" FromRole="GameQuestions" ToRole="Question" />
-          <NavigationProperty Name="Question4" Relationship="Self.FK_GameQuestions_QuestionId5" FromRole="GameQuestions" ToRole="Question" />
-          <NavigationProperty Name="Question5" Relationship="Self.FK_GameQuestions_QuestionId6" FromRole="GameQuestions" ToRole="Question" />
-        </EntityType>
+          <NavigationProperty Name="Question" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId1" FromRole="GameQuestions" ToRole="Question" />
+          <NavigationProperty Name="Question1" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId2" FromRole="GameQuestions" ToRole="Question" />
+          <NavigationProperty Name="Question2" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId3" FromRole="GameQuestions" ToRole="Question" />
+          <NavigationProperty Name="Question3" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId4" FromRole="GameQuestions" ToRole="Question" />
+          <NavigationProperty Name="Question4" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId5" FromRole="GameQuestions" ToRole="Question" />
+          <NavigationProperty Name="Question5" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId6" FromRole="GameQuestions" ToRole="Question" />
+          </EntityType>
         <EntityType Name="Image">
           <Key>
             <PropertyRef Name="Id" />
@@ -319,42 +312,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Thumbnail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_Question_ImageId" FromRole="Image" ToRole="Question" />
+          <NavigationProperty Name="Question" Relationship="HelloWorldModel.FK_Question_ImageId" FromRole="Image" ToRole="Question" />
         </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuestionName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CorrectAnswer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="WrongAnswer1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="WrongAnswer2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="WrongAnswer3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="ImageId" Type="Int32" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Category" Relationship="Self.FK_Question_CategoryId" FromRole="Question" ToRole="Category" />
-          <NavigationProperty Name="GameQuestions" Relationship="Self.FK_GameQuestions_QuestionId1" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="GameQuestions1" Relationship="Self.FK_GameQuestions_QuestionId2" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="GameQuestions2" Relationship="Self.FK_GameQuestions_QuestionId3" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="GameQuestions3" Relationship="Self.FK_GameQuestions_QuestionId4" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="GameQuestions4" Relationship="Self.FK_GameQuestions_QuestionId5" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="GameQuestions5" Relationship="Self.FK_GameQuestions_QuestionId6" FromRole="Question" ToRole="GameQuestions" />
-          <NavigationProperty Name="Image" Relationship="Self.FK_Question_ImageId" FromRole="Question" ToRole="Image" />
-        </EntityType>
-        <Association Name="FK_Question_CategoryId">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="CategoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Game_GameQuestions">
           <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="1" />
           <End Role="Game" Type="Self.Game" Multiplicity="*" />
@@ -367,131 +326,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_GameQuestions_QuestionId1">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId1" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GameQuestions_QuestionId2">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId2" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GameQuestions_QuestionId3">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId3" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GameQuestions_QuestionId4">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId4" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GameQuestions_QuestionId5">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId5" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_GameQuestions_QuestionId6">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="GameQuestions" Type="Self.GameQuestions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GameQuestions">
-              <PropertyRef Name="QuestionId6" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Question_ImageId">
-          <End Role="Image" Type="Self.Image" Multiplicity="0..1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Image">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="ImageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="HelloWorldEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Category" EntityType="Self.Category" />
           <EntitySet Name="Game" EntityType="Self.Game" />
           <EntitySet Name="GameQuestions" EntityType="Self.GameQuestions" />
           <EntitySet Name="Image" EntityType="Self.Image" />
-          <EntitySet Name="Question" EntityType="Self.Question" />
-          <AssociationSet Name="FK_Question_CategoryId" Association="Self.FK_Question_CategoryId">
-            <End Role="Category" EntitySet="Category" />
-            <End Role="Question" EntitySet="Question" />
-          </AssociationSet>
           <AssociationSet Name="FK_Game_GameQuestions" Association="Self.FK_Game_GameQuestions">
             <End Role="GameQuestions" EntitySet="GameQuestions" />
             <End Role="Game" EntitySet="Game" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId1" Association="Self.FK_GameQuestions_QuestionId1">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId2" Association="Self.FK_GameQuestions_QuestionId2">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId3" Association="Self.FK_GameQuestions_QuestionId3">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId4" Association="Self.FK_GameQuestions_QuestionId4">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId5" Association="Self.FK_GameQuestions_QuestionId5">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_GameQuestions_QuestionId6" Association="Self.FK_GameQuestions_QuestionId6">
-            <End Role="Question" EntitySet="Question" />
-            <End Role="GameQuestions" EntitySet="GameQuestions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Question_ImageId" Association="Self.FK_Question_ImageId">
-            <End Role="Image" EntitySet="Image" />
-            <End Role="Question" EntitySet="Question" />
           </AssociationSet>
           <EntitySet Name="User" EntityType="HelloWorldModel.User" />
           <AssociationSet Name="FK_Game_FirstPlayerId" Association="HelloWorldModel.FK_Game_FirstPlayerId">
@@ -501,6 +342,40 @@
           <AssociationSet Name="FK_Game_SecondPlayerId" Association="HelloWorldModel.FK_Game_SecondPlayerId">
             <End Role="User" EntitySet="User" />
             <End Role="Game" EntitySet="Game" />
+          </AssociationSet>
+          <EntitySet Name="Question" EntityType="HelloWorldModel.Question" />
+          <AssociationSet Name="FK_GameQuestions_QuestionId1" Association="HelloWorldModel.FK_GameQuestions_QuestionId1">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameQuestions_QuestionId2" Association="HelloWorldModel.FK_GameQuestions_QuestionId2">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameQuestions_QuestionId3" Association="HelloWorldModel.FK_GameQuestions_QuestionId3">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameQuestions_QuestionId4" Association="HelloWorldModel.FK_GameQuestions_QuestionId4">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameQuestions_QuestionId5" Association="HelloWorldModel.FK_GameQuestions_QuestionId5">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GameQuestions_QuestionId6" Association="HelloWorldModel.FK_GameQuestions_QuestionId6">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="GameQuestions" EntitySet="GameQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_ImageId" Association="HelloWorldModel.FK_Question_ImageId">
+            <End Role="Image" EntitySet="Image" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <EntitySet Name="Practise" EntityType="HelloWorldModel.Practise" />
+          <AssociationSet Name="FK_Practise_User" Association="HelloWorldModel.FK_Practise_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Practise" EntitySet="Practise" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="UserImage" a:ExternalTypeName="HelloWorld.Common.Enums.UserImage" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
@@ -516,9 +391,10 @@
           <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Admin" Type="Boolean" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Image" Type="HelloWorldModel.UserImage" Nullable="false" />
+          <Property Name="Image" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Game" Relationship="HelloWorldModel.FK_Game_FirstPlayerId" FromRole="User" ToRole="Game" />
           <NavigationProperty Name="Game1" Relationship="HelloWorldModel.FK_Game_SecondPlayerId" FromRole="User" ToRole="Game" />
+          <NavigationProperty Name="Practise" Relationship="HelloWorldModel.FK_Practise_User" FromRole="User" ToRole="Practise" />
         </EntityType>
         <Association Name="FK_Game_FirstPlayerId">
           <End Type="HelloWorldModel.User" Role="User" Multiplicity="1" />
@@ -544,22 +420,144 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="Category" a:ExternalTypeName="HelloWorld.Common.Enums.Category" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CorrectAnswer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WrongAnswer1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WrongAnswer2" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WrongAnswer3" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Category" Type="HelloWorldModel.Category" Nullable="false" />
+          <Property Name="ImageId" Type="Int32" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LevelQuestion" Type="HelloWorldModel.QuestionLevel" Nullable="false" />
+          <NavigationProperty Name="GameQuestions" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId1" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="GameQuestions1" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId2" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="GameQuestions2" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId3" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="GameQuestions3" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId4" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="GameQuestions4" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId5" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="GameQuestions5" Relationship="HelloWorldModel.FK_GameQuestions_QuestionId6" FromRole="Question" ToRole="GameQuestions" />
+          <NavigationProperty Name="Image" Relationship="HelloWorldModel.FK_Question_ImageId" FromRole="Question" ToRole="Image" />
+        </EntityType>
+        <Association Name="FK_GameQuestions_QuestionId1">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameQuestions_QuestionId2">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameQuestions_QuestionId3">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId3" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameQuestions_QuestionId4">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId4" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameQuestions_QuestionId5">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId5" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GameQuestions_QuestionId6">
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="HelloWorldModel.GameQuestions" Role="GameQuestions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GameQuestions">
+              <PropertyRef Name="QuestionId6" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_ImageId">
+          <End Type="HelloWorldModel.Image" Role="Image" Multiplicity="0..1" />
+          <End Type="HelloWorldModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Image">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="ImageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="QuestionLevel" a:ExternalTypeName="HelloWorld.Common.Enums.QuestionLevel" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+        <EntityType Name="Practise">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Points" Type="Int32" Nullable="false" />
+          <Property Name="DatePlayed" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Level" Type="HelloWorldModel.QuestionLevel" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="HelloWorldModel.FK_Practise_User" FromRole="Practise" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Practise_User">
+          <End Type="HelloWorldModel.User" Role="User" Multiplicity="1" />
+          <End Type="HelloWorldModel.Practise" Role="Practise" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Practise">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="HelloWorldModelStoreContainer" CdmEntityContainer="HelloWorldEntities">
-          <EntitySetMapping Name="Category">
-            <EntityTypeMapping TypeName="HelloWorldModel.Category">
-              <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Game">
             <EntityTypeMapping TypeName="HelloWorldModel.Game">
               <MappingFragment StoreEntitySet="Game">
@@ -598,21 +596,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Question">
-            <EntityTypeMapping TypeName="HelloWorldModel.Question">
-              <MappingFragment StoreEntitySet="Question">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="QuestionName" ColumnName="QuestionName" />
-                <ScalarProperty Name="CorrectAnswer" ColumnName="CorrectAnswer" />
-                <ScalarProperty Name="WrongAnswer1" ColumnName="WrongAnswer1" />
-                <ScalarProperty Name="WrongAnswer2" ColumnName="WrongAnswer2" />
-                <ScalarProperty Name="WrongAnswer3" ColumnName="WrongAnswer3" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="HelloWorldModel.User">
               <MappingFragment StoreEntitySet="User">
@@ -624,6 +607,34 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Question">
+            <EntityTypeMapping TypeName="HelloWorldModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="LevelQuestion" ColumnName="LevelQuestion" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="WrongAnswer3" ColumnName="WrongAnswer3" />
+                <ScalarProperty Name="WrongAnswer2" ColumnName="WrongAnswer2" />
+                <ScalarProperty Name="WrongAnswer1" ColumnName="WrongAnswer1" />
+                <ScalarProperty Name="CorrectAnswer" ColumnName="CorrectAnswer" />
+                <ScalarProperty Name="QuestionName" ColumnName="QuestionName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Practise">
+            <EntityTypeMapping TypeName="HelloWorldModel.Practise">
+              <MappingFragment StoreEntitySet="Practise">
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="DatePlayed" ColumnName="DatePlayed" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HelloWorld.Api.Helpers;
+using HelloWorld.Api.Mailer;
 using HelloWorld.Api.Models;
+using HelloWorld.Api.Models.User;
 using HelloWorld.Common.Exceptions;
 using HelloWorld.Data.Model;
 using System;
@@ -39,6 +41,20 @@ namespace HelloWorld.Api.Controllers
         {
             User userDb = UserManager.UpdateUserProfile(Mapper.Map<User>(user));
             return CreateLoginToken(userDb);
+        }
+
+        [TokenAuthorize]
+        [HttpPost]
+        public bool SendFeedback(MailModel model)
+        {
+            model.FirstName = Token.FirstName;
+            model.LastName = Token.LastName;
+            model.Email = Token.Email;
+            model.Username = Token.Username;
+            UserMailer mailer = new UserMailer();
+            mailer.Contact(model).Send();
+
+            return true;
         }
 
         [NonAction]

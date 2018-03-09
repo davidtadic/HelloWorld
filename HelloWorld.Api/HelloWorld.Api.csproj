@@ -53,6 +53,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mvc.Mailer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcMailer.4.5\lib\45\Mvc.Mailer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -143,6 +147,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -151,6 +156,11 @@
     <Compile Include="Helpers\GlobalExceptionHandler.cs" />
     <Compile Include="Helpers\TokenAuthorizeAttribute.cs" />
     <Compile Include="Helpers\ValidateModelAttribute.cs" />
+    <Compile Include="Mailer\UserMailer.cs" />
+    <Compile Include="Models\Game\PractiseModel.cs" />
+    <Compile Include="Models\Game\PractiseRequestModel.cs" />
+    <Compile Include="Models\Game\QuestionModel.cs" />
+    <Compile Include="Models\User\MailModel.cs" />
     <Compile Include="Models\User\TokenContext.cs" />
     <Compile Include="Models\User\UserLoginModel.cs" />
     <Compile Include="Models\User\UserModel.cs" />
@@ -185,6 +195,21 @@
       <Project>{FA454BB1-731B-4BC1-9417-77EDE551C989}</Project>
       <Name>HelloWorld.Data.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserMailer\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\UserMailer\Contact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

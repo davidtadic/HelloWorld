@@ -60,12 +60,12 @@
     <Folder Include="dbo" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Category.sql" />
     <Build Include="dbo\Image.sql" />
     <Build Include="dbo\User.sql" />
     <Build Include="dbo\Question.sql" />
     <Build Include="dbo\GameQuestions.sql" />
     <Build Include="dbo\Game.sql" />
+    <Build Include="dbo\Practise.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="HelloWorld.Sql.refactorlog" />

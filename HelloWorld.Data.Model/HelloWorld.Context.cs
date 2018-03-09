@@ -25,11 +25,11 @@ namespace HelloWorld.Data.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<GameQuestions> GameQuestions { get; set; }
         public virtual DbSet<Image> Image { get; set; }
-        public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Question> Question { get; set; }
+        public virtual DbSet<Practise> Practise { get; set; }
     }
 }
